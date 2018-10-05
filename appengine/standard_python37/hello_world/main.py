@@ -14,8 +14,7 @@
 
 # [START gae_python37_app]
 from flask import Flask, jsonify, request
-from pyteaser import SummarizeUrl
-
+from gensim.summarization.summarizer import summarize
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
@@ -26,11 +25,12 @@ def hello():
     """Return a friendly HTTP greeting."""
     return 'Hello World!'
 
-@app.route('/summary')
+@app.route('/summary', methods=['POST'])
 def summary():
     """Return a summary"""
-    url = request.json["url"]
-    summaries = SummarizeUrl(url)
+    text = request.json["text"]
+    summaries = summarize(text)
+    print(type(summaries))
     return jsonify(summaries)
 
 if __name__ == '__main__':
